@@ -6,8 +6,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -21,22 +22,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
  	@Override
  	protected void configure(HttpSecurity http) throws Exception {
- 		http.authorizeRequests().antMatchers("/**")//.permitAll().anyRequest()
- 				.hasRole("USER").and()
+ 		http
+ 		.authorizeRequests()
+ 		//.antMatchers("/**")//.permitAll().anyRequest()
+ 			.antMatchers("/api/**").hasRole("USER")
+ 			.anyRequest().authenticated()
+ 			.and()
  				// Possibly more configuration ...
- 				.httpBasic()
- 				.and()
- 				.formLogin() // enable form based log in
+ 				//.httpBasic()
+ 				//.and()
+ 		.formLogin() // enable form based log in
  				// set permitAll for all URLs associated with Form Login
- 				.permitAll();
+ 			.permitAll();
  	}
 
  	@Override
  	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
  		auth
  		// enable in memory based authentication with a user named "user" and "admin"
- 		.inMemoryAuthentication().withUser("user").password("password").roles("USER")
- 				.and().withUser("admin").password("password").roles("USER", "ADMIN");
+ 		.inMemoryAuthentication()
+ 		.passwordEncoder(NoOpPasswordEncoder.getInstance())
+ 		.withUser("user").password("password").roles("USER")
+ 			.and()
+ 		.withUser("admin").password("password").roles("USER", "ADMIN");
  	}
 	
 }

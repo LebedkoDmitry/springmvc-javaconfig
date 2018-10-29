@@ -13,6 +13,9 @@
 		<spring.version>5.0.7.RELEASE</spring.version>
 		<jcl.slf4j.version>1.7.25</jcl.slf4j.version>
 		<logback.version>1.2.3</logback.version>
+
+		<downloadSources>true</downloadSources>
+		<downloadJavadocs>true</downloadJavadocs>
 	</properties>
 
 	<dependencies>
